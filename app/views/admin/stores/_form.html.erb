@@ -1,0 +1,58 @@
+<%= form_for([:admin, @store], :html => { :multipart => true }) do |f| %>
+    <% if @store.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(@store.errors.count, "error") %> prohibited this store from being saved:</h2>
+
+          <ul>
+            <% @store.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+    <% end %>
+
+    <div class="signin_small_input_holder">
+      <%= f.label :name %>
+      <br/>
+      <%= f.text_field :name, :readonly => true %>
+    </div>
+    <div class="signin_small_input_holder">
+      <%= f.label :description %>
+      <br/>
+      <%= f.text_area :description %>
+    </div>
+    <div class="signin_small_input_holder">
+      <%= f.label :url %>
+      <br/>
+      <%= f.text_field :url, :readonly => true %>
+    </div>
+    <div class="signin_small_input_holder">
+      <%= f.label :package_id %>
+      <br/>
+      <%= f.select("package_id", @packages.collect { |p| [p.name, p.id] }) %>
+    </div>
+    <% super_admin_role = Role.find(:first, :conditions => ["name = ?", "SuperAdmin"]) %>
+    <% if current_user.roles.include?(super_admin_role) %>
+        <div class="checkbox_holder">
+          <div class="checkbox_input_holder">
+            <%= f.check_box :is_featured %>
+            <label>Featured</label>
+
+          </div>
+        </div>
+    <% end %>
+
+    <div id="photos" style="float: left;
+            margin-top: 20px;
+            width: 94%;">
+      <%= f.label :snap, 'Attachment' %>
+      <br/>
+      <%= f.fields_for :image do |builder| %>
+          <%= render "image", :image => builder %>
+      <% end %>
+
+    </div>
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+<% end %>

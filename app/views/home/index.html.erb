@@ -1,0 +1,427 @@
+<div class="main-page">
+
+<div class="wrapper body-div">
+<div class="white-bg">
+  <div class="w100 mtop40 bdr-bot">
+    <div class="left-content flt">
+      <div class="w100 bdr-bot">
+        <div class="data-holder-left flt">
+          <h1>Peddle your product </h1>
+
+          <p>It can be anything from a photo, video or website.</p>
+        </div>
+        <div class="data-holder-right flt">
+          <textarea id="feed-message"></textarea>
+
+          <div class="w100 btn-holder mtop10">
+            <img src="/assets/pic.png" alt=""/>
+            <input id="peddle" type="submit" value=""/>
+
+            <div style="float:right; margin:18px 10px 0 0;">
+
+              <% if $token.nil? && $secret.nil? %>
+                  <%#= link_to "Sign in with Twitter", "/auth/twitter" %>
+                  <input type="checkbox" id="twitter_post" value="Post on twitter"/>
+                  Post on Twitter
+              <% else %>
+                  <input type="checkbox" id="twitter_post" value="Post on twitter"/>
+                  Post on Twitter
+              <% end %>
+            </div>
+            <div style="float:right; margin:18px 10px 0 0;">
+              <% if $ftoken.nil? && $fsecret.nil? %>
+                  <input type="checkbox" id="facebook_post" value="Post on Facebook"/>
+                  Post on FaceBook
+                  <%#= link_to "Sign in with FaceBook", "/auth/facebook" %>
+              <% else %>
+                  <input type="checkbox" id="facebook_post" value="Post on Facebook"/>
+                  Post on FaceBook
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="stream-container">
+        <span class="stream-heading time-line"><a href="javascript:;">TimeLine</a></span>
+        <span class="stream-heading your-feeds"><a href="javascript:;">Your Feeds</a></span>
+        <span class="stream-heading feeds-for-you"><a href="javascript:;">Feeds for you</a></span>
+      </div>
+      <div class="main-feed">
+        <div class="feeds">
+          <div id="first-stream"></div>
+          <div class="streaming-div w100 bdr-bot">
+          </div>
+          <% @feeds.each do |feed| %>
+              <div class='streaming-div w100 bdr-bot'>
+                <div class='w100 mtop20' style='padding-left:10px;'>
+                  <div class='post-left-hold'>
+                    <% unless feed.user.profile_image.nil? %>
+                        <%= image_tag(feed.user.profile_image.snap, :height => "92px", :width => "103px") %>
+                    <% else %>
+                        <img src="/assets/no-image.jpg" height="92px" width="103px" alt=""/>
+                    <% end %>
+                  </div>
+                  <div class='post-cont-hold'>
+                    <% admin_role = Role.find(:first, :conditions => ["name = ?", "Admin"]) %>
+                    <% if feed.user.roles.include?(admin_role) %>
+                        <h1>
+                          <a href="<%= root_url(:subdomain => feed.user.store.name) %>" style="text-decoration:none;"><%= feed.user.name ? feed.user.name : "User" %></a>
+                        </h1>
+                    <% else %>
+                        <h1><%= feed.user.name ? feed.user.name : "User" %></h1>
+                    <% end %>
+
+                    <p><%= feed.message %></p>
+
+                    <div class='like-hold'></div>
+                    <div class="like-hold">
+                      <% if current_user.id == feed.user_id %>
+                          <a class="removeClass" href="javascript:;" feed_id="<%= feed.id %>">Remove</a> -
+                      <% end %>
+                      <%= duration(Time.now - feed.created_at) %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          <% end %>
+
+        </div>
+      </div>
+    </div>
+    <div class="right-content frt">
+
+      <%= render :partial => "/shared/right_login_menu" %>
+
+    </div>
+
+    <div class="w100 mtop20">
+      <div class="content-top-bg flt">
+        <div class="heading-top flt">
+          <h1>Sales floor</h1>
+
+          <p>Our featured stores</p>
+        </div>
+        <div class="back-btn-holder frt">
+          <img src="/assets/next-btn.png"/>
+          <img src="/assets/back-btn.png"/>
+        </div>
+      </div>
+      <div class="content-mid-bg flt">
+        <% unless @stores.blank? %>
+            <% @stores.each do |store| %>
+                <% unless store.users.first.confirmed_at.blank? %>
+                    <div class="cont bdr-bot flt">
+                      <div class="gellery-left flt">
+                        <div class="gellary-logo flt">
+                          <% unless store.image.blank? %>
+                              <%= image_tag(store.image.snap) %>
+                          <% else %>
+                              <img src="/assets/no_img.jpg" alt=""/>
+                          <% end %>
+                          <img src="/assets/larg-fram.png" alt="" class="gellary-frame"/>
+                        </div>
+
+                        <div class="moreinfo w100">
+                          <a  href="javascript:;">For more information</a>
+
+                          <div class="w100">
+                            <%= link_to image_tag("/assets/visit.png"), root_url(:subdomain =>store.name) %>
+                          </div>
+                        </div>
+
+                      </div>
+                      <div class="gellery-right frt">
+                        <h1 class="mtop20"><%= store.name %> store</h1>
+
+                        <p><%= duration(Time.now - store.created_at) %> ago</p>
+
+                        <p class="mtop20"><%= store.description %></p>
+
+                        <p class="mtop20"><%= "http://"+store.url %></p>
+
+                        <div class="w100 g-img">
+
+                          <% unless store.products.nil? %>
+                              <% prod_count=0 %>
+                              <label>more photos</label>
+                              <% store.products.each do |product| %>
+                                  <% unless product.images.nil? %>
+                                      <% product.images.each do |image| %>
+                                          <% if prod_count < 3 %>
+                                              <div class="small-logo flt">
+                                                <%= image_tag(image.snap, :width => "60", :height => "60", :class => "small_imgs") %>
+                                                <img src="/assets/logo-small-frame.png" alt="" class="frame"/>
+                                                <% prod_count+=1 %>
+                                              </div>
+                                          <% end %>
+                                      <% end %>
+                                  <% end %>
+                              <% end %>
+                          <% end %>
+                        </div>
+                      </div>
+                    </div>
+                <% end %>
+            <% end %>
+        <% end %>
+
+      </div>
+      <div class="content-bot-bg flt">
+        <img id="more_stores" src="/assets/more-stores.png" alt=""/>
+        <label>View more of our stores</label>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+<div class="w100 mtop40 body-div">
+  <div class="blue-left flt"></div>
+  <div class="blue-mid flt">
+    <div id="list">
+      <div class="w100">
+        <div class="heading-top flt">
+          <h1>Shopping mall</h1>
+
+          <p>Our featured stores</p>
+        </div>
+        <div class="back-btn-holder frt">
+          <span class="next"><img src="/assets/next-btn.png"></span>
+          <span class="prev"><img src="/assets/back-btn.png"></span>
+        </div>
+      </div>
+      <div class="w100">
+        <div class="slider">
+          <ul>
+            <% @featured_stores.each do |fstore| %>
+                <li>
+                  <div class="thumb-img flt ml18">
+                    <a href="<%= root_url(:subdomain =>fstore.name) %>">
+                      <% unless fstore.image.blank? %>
+                          <%= image_tag(fstore.image.snap) %>
+                      <% else %>
+                          <img src="/assets/no_img.jpg" alt=""/>
+                      <% end %>
+                    </a>
+
+                    <p><%= fstore.name %></p>
+
+                  </div>
+                </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="blue-right flt"></div>
+</div>
+
+</div>
+
+</div>
+
+
+<script type="text/javascript">
+
+    function updatefeeds() {
+        $.ajax({
+            url: "/feeds",
+            success: function(response) {
+                $('.feeds').remove();
+                $('.main-feed').append(response);
+            }
+        });
+    }
+    //Captify
+    $(document).ready(function() {
+        try {
+            offset = 3;
+            $("#more_stores").click(function() {
+                $.ajax({
+                    url: '/next/stores?offset=' + offset,
+                    success: function(response) {
+                        $('.content-mid-bg').append(response);
+                        if (response != "") {
+                            offset += 3;
+                        }
+
+                    }
+                });
+            });
+            $(".removeClass").live("click", function() {
+                var feed_id = $(this).attr("feed_id");
+                var div = $(this).parent().parent().parent().parent();
+                $.ajax({
+                    type: "DELETE",
+                    url: "/feeds/destroy/" + feed_id,
+                    success: function(response) {
+                        if (response == "success") {
+                            div.slideUp('slow');
+                        } else {
+                            alert("Could not remove your feed. Please try again later");
+                        }
+                    }
+                });
+            });
+            $('.your-feeds a').live("click", function() {
+                var ref = this;
+                $.ajax({
+                    url: "/feeds/your_feeds",
+                    success: function(response) {
+                        $('.stream-heading').removeClass("active");
+                        $(ref).parent().addClass("active");
+                        $('.feeds').remove();
+                        if (response == "You need to sign in") {
+                            $.gritter.add({
+                                // (string | mandatory) the heading of the notification
+                                title: 'Notice!',
+                                // (string | mandatory) the text inside the notification
+                                text: response,
+                                time: 5000
+                            });
+                        } else {
+                            $('.main-feed').append(response);
+                        }
+
+                    }
+                });
+            });
+            $('.time-line').addClass("active");
+            $('.time-line a').live("click", function() {
+                var ref = this;
+                $.ajax({
+                    url: "/feeds",
+                    success: function(response) {
+                        $('.stream-heading').removeClass("active");
+                        $(ref).parent().addClass("active");
+                        $('.feeds').remove();
+                        if (response == "You need to sign in") {
+                            $.gritter.add({
+                                // (string | mandatory) the heading of the notification
+                                title: 'Notice!',
+                                // (string | mandatory) the text inside the notification
+                                text: response,
+                                time: 5000
+                            });
+                        } else {
+                            $('.main-feed').append(response);
+                        }
+                    }
+                });
+            });
+            $('.feeds-for-you a').live("click", function() {
+                var ref = this;
+                $.ajax({
+                    url: "/feeds/feeds_for_you",
+                    success: function(response) {
+                        $('.stream-heading').removeClass("active");
+                        $(ref).parent().addClass("active");
+                        $('.feeds').remove();
+                        if (response == "You need to sign in") {
+                            $.gritter.add({
+                                // (string | mandatory) the heading of the notification
+                                title: 'Notice!',
+                                // (string | mandatory) the text inside the notification
+                                text: response,
+                                time: 5000
+                            });
+                        } else {
+                            $('.main-feed').append(response);
+                        }
+                    }
+                });
+            });
+
+            setInterval("updatefeeds()", 30000);
+
+            $("#peddle").live("click", function() {
+                if ($("#feed-message").val() != "") {
+                <% unless current_user.profile_image.nil? %>
+                    var image = "<img src='<%= current_user.profile_image.snap%>' height='92px' width='103px' alt=''/>";
+                <% else %>
+                    var image = "<img src='/assets/no-image.jpg' height='92px' width='103px' alt=''/>";
+                <% end %>
+                    var user_id = "<%= current_user.id %>";
+                    $.post("/feeds/create", { message:  $("#feed-message").val(), id: user_id}).success(function(response) {
+                        $('.streaming-div').first().replaceWith("<div class='streaming-div w100 bdr-bot'><div class='w100 mtop20' style='padding-left:10px;'><div class='post-left-hold'>" + image + "</div><div class='post-cont-hold'><h1>" + $('label').first().text() + "</h1><p>" + $("#feed-message").val() + "</p><div class='like-hold'></div><div class='like-hold'><a class='removeClass' href='javascript:;' feed_id='" + response + "' >Remove</a> - 0 minutes ago</div></div></div></div>");
+                        $('.streaming-div').first().slideDown(500);
+                        $('.streaming-div').first().before("<div class='streaming-div w100 bdr-bot'></div>");
+                        $('.streaming-div').first().slideUp(500);
+                        if ($("#twitter_post").is(':checked')) {
+                            $.ajax({
+                                url: "/tweet?tweet=" + $("#feed-message").val(),
+                                success: function(response) {
+                                    if (response == "Success") {
+                                        $.gritter.add({
+                                            // (string | mandatory) the heading of the notification
+                                            title: 'Notice!',
+                                            // (string | mandatory) the text inside the notification
+                                            text: 'Your last feed has also been posted on twitter',
+                                            time: 5000
+                                        });
+                                    } else {
+                                        $.gritter.add({
+                                            // (string | mandatory) the heading of the notification
+                                            title: 'Notice!',
+                                            // (string | mandatory) the text inside the notification
+                                            text: 'Your last feed has not been posted on twitter',
+                                            time: 5000
+                                        });
+                                    }
+                                }
+                            });
+
+                        }
+                        if ($("#facebook_post").is(':checked')) {
+                            $.ajax({
+                                url: "/fb_update?message=" + $("#feed-message").val(),
+                                success: function(response) {
+                                    if (response == "Success") {
+                                        $.gritter.add({
+                                            // (string | mandatory) the heading of the notification
+                                            title: 'Notice!',
+                                            // (string | mandatory) the text inside the notification
+                                            text: 'Your last feed has also been posted on FaceBook',
+                                            time: 5000
+                                        });
+                                    } else {
+                                        $.gritter.add({
+                                            // (string | mandatory) the heading of the notification
+                                            title: 'Notice!',
+                                            // (string | mandatory) the text inside the notification
+                                            text: 'Your last feed has not been posted on FaceBook',
+                                            time: 5000
+                                        });
+                                    }
+                                }
+                            });
+
+                        }
+                    });
+                }
+            });
+
+            $(".header_links").click(function() {
+                var parent = $(this).parent();
+                var reference = this;
+                $.ajax({
+                    url: $(this).attr("url"),
+                    success: function(response) {
+                        $(this).addClass("done");
+                        $('.body-div').remove();
+                        $('.main-page').append(response);
+                        $('.tab-act').removeClass('tab-act');
+                        parent.addClass('tab-act');
+                    }
+                });
+            });
+        }
+        catch
+                (e) {
+            console.log(e.message);
+        }
+    })
+            ;
+</script>

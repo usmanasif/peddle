@@ -1,0 +1,127 @@
+<div class="wrapper" style="width: 975px;">
+  <div class="w100">
+    <div class="peddle-top-left-bar flt"></div>
+    <div class="peddle-top-mid-bar flt" style="width: 953px !important;">
+      <div class="lego-peddle-small flt"><%= link_to image_tag("/assets/peddle-logo-small.png"), $url %></div>
+      <div class="profile-pic flt">
+        <% if current_user %>
+            <% unless current_user.profile_image.nil? %>
+                <%= image_tag(current_user.profile_image.snap, :width => "50", :height => "50") %>
+            <% else %>
+                <img src="/assets/no-image.jpg" alt="" width="50px" height="50px"/>
+            <% end %>
+            <% unless current_user.name.nil? %>
+                <label><%= current_user.name %></label>
+            <% else %>
+                <label>User</label>
+            <% end %>
+        <% end %>
+        <input id="search" type="text" value="Search"/>
+        <input id="searchBtn" type="submit" value=""/>
+      </div>
+
+      <ul class="top-links frt">
+        <li class=<%= "active-link" if params[:action] == "sales_floor" %>>
+          <a href="<%= $url+"sales_floor" %>">Sales floor</a>
+        </li>
+        <% admin_role = Role.find(:first, :conditions => ["name = ?", "Admin"]) %>
+        <% if current_user.roles.include?(admin_role) %>
+            <li><a href="<%= root_url(:subdomain => current_user.store.name) %>">Sales view</a></li>
+        <% end %>
+        <li>
+          <a class="header_links <%= "active-link" if params[:controller] == "blog_posts" %>" href="#" url="/blog_posts">Blogs</a>
+        </li>
+        <!--<li><%#= link_to "Logout", "/sign_out" %></li>-->
+        <li class="bg-r-none"><a href="#">Setting <img class="downarrow" alt="" src="assets/down-arrow.png"></a>
+        </li>
+      </ul>
+      <div class="setting" style="display:none;">
+        <div class="setting-top-bg flt"></div>
+        <div class="setting-mid-bg flt">
+
+          <ul class="setting-links flt">
+            <li><a class="header_links" href="#" url="users/edit">Account settings</a></li>
+            <!--<li class="act"><a href="#">Privacy settings</a></li>-->
+            <li><a href="sign_out">Log out</a></li>
+            <!--<li><a href="#">Help</a></li>-->
+          </ul>
+
+        </div>
+        <div class="setting-bot-bg flt"></div>
+      </div>
+
+    </div>
+    <div class="peddle-top-right-bar flt"></div>
+  </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+        try {
+            $(".setting").hide();
+            $(".bg-r-none,.setting").live("mouseover", function() {
+                $(".setting").show();
+            });
+            $(".bg-r-none,.setting").live("mouseleave", function() {
+                $(".setting").hide();
+            });
+
+            $(".header_links").click(function() {
+                var parent = $(this).parent();
+                var reference = this;
+                $.ajax({
+                    url: $(this).attr("url"),
+                    success: function(response) {
+                        $(this).addClass("done");
+                        $('.body-div').remove();
+                        $('.main-page').append(response);
+                        $('.tab-act').removeClass('tab-act');
+                        parent.addClass('tab-act');
+                    }
+                });
+            });
+
+        <%if params[:controller]=='stores'%>
+            $("#searchBtn").click(function() {
+                var pname = $("#search").val();
+                $.ajax({
+                    url: '/products/search_products?pname=' + pname,
+                    success: function(response) {
+
+                        if (response != "") {
+                            $('#product_container').replaceWith(response);
+                            $('.headingProd').html('Search products');
+                            $('.more-produts').hide();
+                        }
+
+                    }
+                });
+            });
+        <%end%>
+        <%if params[:controller]=='home'%>
+            $("#searchBtn").click(function() {
+                var sname = $("#search").val();
+                $.ajax({
+                    url: '/stores/search_store?sname=' + sname,
+                    success: function(response) {
+
+                        if (response != "") {
+                            $('.left-content').hide();
+                            $('.content-mid-bg').replaceWith(response);
+                            $('.heading-top p').html('Search Stores');
+                            $('.content-bot-bg').children().hide();
+                            $('.content-top-bg').parent().width('300px');
+                        }
+
+                    }
+                });
+            });
+        <%end%>
+        }
+        catch(e) {
+            console.log('in header ' + e.message);
+        }
+
+    });
+</script>

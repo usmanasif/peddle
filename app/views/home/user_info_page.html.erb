@@ -1,0 +1,179 @@
+<p>This is user info page</p>
+
+
+
+
+<%= form_for @user do |f| %>
+    <% if @user.errors.any? %>
+        <div class="error_messages">
+          <h2>Form is invalid</h2>
+          <ul>
+            <% for message in @user.errors.full_messages %>
+                <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+    <% end %>
+    <% if @user.email.blank? %>
+        <div class="field">
+          <%= f.label :email %>
+          <%= f.text_field :email %>
+        </div>
+    <% end %>
+
+    <div id="123" style="display: block">
+      <%= f.label :Buyer %>
+      <!--radio_button(object_name, method, tag_value, options = {})-->
+      <%= radio_button("user", "role", User::BUYER) %>
+
+
+    </div>
+    <div id="seller123" style="display: block">
+      <%= f.label :Seller %>
+      <%= radio_button("user", "role", User::SELLER) %>
+      <%#=   radio_button_tag(:role, "seller")%>
+      <%#= select( [['New', 'new'], ['resolved', 'resolved'] , ['closed', 'closed']]) %>
+    </div>
+    <div id="789" style="display: none" class="field">
+
+      <%= f.label :store_name %>
+      <%= f.text_field :store_name %>
+
+    </div>
+
+
+      <p>this is a hidden feild phara</p>
+      <%= f.fields_for :profile do |p| %>
+        <div id="account_display" style="display: none" class="field">
+          <h3>Select a package</h3>
+          <% @accounts.each do |account| %>
+              <div id="blank">
+                <%= p.radio_button("account_id", account.id) %>
+                <%= account.title %> <%= (account.price.to_i == 0)? ("Free"):(number_to_currency(account.price.to_i)) %>
+
+              </div>
+          <% end %>
+        </div>
+
+        <div id="creditcarddetail" style="display: none" class="field">
+          <div class="field">
+            <%= p.label :cc_type %>
+            <%= p.text_field :cc_type %>
+          </div>
+          <div class="field">
+            <%= p.label :number %>
+            <%= p.text_field :number %>
+          </div>
+          <div class="field">
+            <%= p.label :verification_value %>
+            <%= p.text_field :verification_value %>
+          </div>
+          <div class="field">
+            <%= p.label :month %>
+            <%= p.text_field :month %>
+          </div>
+          <div class="field">
+            <%= p.label :year %>
+            <%= p.text_field :year %>
+          </div>
+          <div class="field">
+            <%= p.label :first_name %>
+            <%= p.text_field :first_name %>
+          </div>
+          <div class="field">
+            <%= p.label :last_name %>
+            <%= p.text_field :last_name %>
+          </div>
+          <div class="field">
+            <%= p.label :street_1 %>
+            <%= p.text_field :street_1 %>
+          </div>
+          <div class="field">
+            <%= p.label :city %>
+            <%= p.text_field :city %>
+          </div>
+          <div class="field">
+            <%= p.label :state %>
+            <%= p.text_field :state %>
+          </div>
+          <div class="field">
+            <%= p.label :country %>
+            <%= p.text_field :country %>
+          </div>
+          <div class="field">
+            <%= p.label :zip %>
+            <%= p.text_field :zip %>
+          </div>
+          <div class="field">
+            <%#= p.label :email %>
+            <%#= p.text_field :email %>
+          </div>
+          <%#= p.submit %>
+      <% end %>
+
+    </div>
+
+    <div class="actions"><%= f.submit %></div>
+<% end %>
+
+</div>
+
+
+
+<script language=javascript type='text/javascript'>
+
+
+    $(document).ready(function () {
+//
+        $("#user_profile_attributes_account_id_2").click(function () {
+
+            $("#creditcarddetail").show();
+            // $("#123").hide();
+
+
+        });
+        $("#user_profile_attributes_account_id_3").click(function () {
+
+            $("#creditcarddetail").show();
+            // $("#123").hide();
+
+
+        });
+        $("#user_profile_attributes_account_id_4").click(function () {
+
+            $("#creditcarddetail").show();
+            // $("#123").hide();
+
+
+        });
+        $("#seller123").click(function () {
+
+            $("#789").show();
+            $("#account_display").show();
+
+            // $("#123").hide();
+
+//          }
+//          else
+//          {
+//              $("#seller123").show();
+//              $("#123").show();
+//              $("#789").hide();
+//          }
+
+        });
+
+        $("#123").click(function () {
+
+            $("#789").hide();
+            $("#account_display").hide();
+            $("#creditcarddetail").hide();
+            // $("#123").hide();
+            $("#789").val("");
+            $("#paid").hide;
+            $("#paid").val("");
+        });
+//
+
+    });
+</script>

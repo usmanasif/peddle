@@ -1,0 +1,27 @@
+<%= javascript_include_tag "/javascripts/ckeditor/ckeditor.js" %>
+<div class="rightContainer">
+  <div class="rightHeading1">
+    <div class="rgtHeading">Product Show</div>
+  </div>
+
+  <div class="inputMain mtop20">
+    <div class="label">TITTLE :</div>
+    <div class="inputText1"><%=@product.name%></div>
+
+  </div>
+  <div class="inputMain" >    
+    <div class="textareaMain">
+      <%=raw(@product.description)%>
+    </div>
+    <div id="photos" style="float: left;
+    margin-top: 20px;
+    width: 94%;">
+    <label class="w100">Images</label>
+    <%@product.images.each_with_index do |p_i, index|%>      
+      <div class="w100">
+        <%=image_tag(p_i.snap, :width => "200", :height => "150")%>      
+      </div>
+    <%end%>        
+  </div>
+  </div>
+</div>

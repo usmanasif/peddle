@@ -1,0 +1,44 @@
+<div class="rightContainer">
+  <div class="rightHeading1">
+    <div class="rgtHeading1">MANAGE PRODUCT DETAILS</div>
+    <div class="submitInrBtn1"><%= link_to 'New Product Detail', '/admin/product_details/new?id='+@product.id.to_s %></div>
+  </div>
+  <div class="mngMain mtop20">
+    <div class="label">SEARCH MEMBER :</div>
+    <div class="inputText"><input type="text" value=""/></div>
+    <div class="mediaBtn1">
+      <input type="submit" value="Search" class="searchlBtn"/>
+    </div>
+  </div>
+
+  <div class="mngData mtop20">
+    <div class="fMngHeading">Size</div>
+    <div class="sMngHeading">Color</div>
+    <div class="tMngHeading">Price</div>
+    <div class="foMngHeading">Action</div>
+  </div>
+
+  <div class="mngData mtop20">
+    <% unless @product_details.nil? %>
+        <% @product_details.each_with_index do |product_detail, index| %>
+            <div>
+              <div class="fMngHeading2"><%= product_detail.size %></div>
+              <div class="sMngHeading2"><%= product_detail.color %></div>
+              <div class="tMngHeading2"><%= product_detail.price %></div>
+              <div class="foMngHeading2">
+                <strong>
+                  <%= link_to 'Edit', edit_admin_product_detail_path(product_detail), :class => "smallBtn" %>
+                  <%= link_to 'Delete', '/admin/product_details/destroy/'+product_detail.id.to_s, :class => "smallBtn", :confirm => 'Are you sure?', :method => :delete %>
+                </strong>
+              </div>
+            </div>
+        <% end %>
+    <% end %>
+
+  </div>
+
+
+</div>
+
+
+

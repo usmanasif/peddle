@@ -1,0 +1,79 @@
+<!doctype html>
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!-- Consider adding a manifest.appcache: h5bp.com/d/Offline -->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+
+  <!-- Use the .htaccess and remove these lines to avoid edge case issues.
+       More info: h5bp.com/b/378 -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <title>Peddle </title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <!-- Place favicon.ico and apple-touch-icon.png in the root directory: mathiasbynens.be/notes/touch-icons -->
+
+  <%= stylesheet_link_tag "application" %>
+  <%= csrf_meta_tags %>
+
+  <!-- More ideas for your <head> here: h5bp.com/d/head-Tips -->
+
+  <!-- All JavaScript at the bottom, except this Modernizr build incl. Respond.js
+       Respond is a polyfill for min/max-width media queries. Modernizr enables HTML5 elements & feature detects;
+       for optimal performance, create your own custom Modernizr build: www.modernizr.com/download/ -->
+  <%= javascript_include_tag "jquery-1.6.3", "modernizr" %>
+
+</head>
+<body class="<%= params[:controller] %>">
+<!--<body style="<%#= show_user_bg %>">-->
+
+<%#= $url = root_url(:subdomain => false)
+   #if request.subdomain != ""
+   #    new_url = request.subdomain+'.'
+   #    $url    = $url.sub(new_url, '')
+   end %>
+
+
+<div id="container">
+  <div class="user_nav ">
+    <% if current_user %>
+        Logged in as <%= current_user.email %>.
+        <%= link_to "Log out", logout_path %>
+    <% else %>
+        <%= link_to "Sign up", signup_path %> or
+        <%= link_to "Log in", login_path  %>.
+        <%= link_to 'Login with Twitter', auth_at_provider_path(:provider => :twitter) %> |
+        <%= link_to 'Login with Facebook', auth_at_provider_path(:provider => :facebook) %>
+    <% end %>
+  </div>
+  <% flash.each do |name, msg| %>
+      <%= content_tag :div, msg, :id => "flash_#{name}" %>
+  <% end %>
+  <%= yield %>
+</div>
+
+
+<!-- JavaScript at the bottom for fast page loading -->
+<%#= javascript_include_tag "application" %>
+<%= javascript_include_tag "myriad_web_pro", "application", "jquery.ad-gallery", "jquery-ui.min" %>
+<%= javascript_include_tag "jquery-1.6.3", "jquery.form", "jquery.validate", "jquery-minislider", "jcarousellite_1.0.1.pack", "captify.tiny", "jquery.carousel.min", "jquery.mousewheel.min", "jquery.gritter" %>
+<!-- end scripts -->
+
+
+<!-- Asynchronous Google Analytics snippet. Change UA-XXXXX-X to be your site's ID.
+mathiasbynens.be/notes/async-analytics-snippet -->
+
+</body>
+</html>

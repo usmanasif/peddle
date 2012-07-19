@@ -1,0 +1,63 @@
+<div class="footer w100 mtop50">
+  <div class="wrapper">
+    <div class="w100">
+      <div class="linksholder flt">
+        <ul class="foot-links bdr-bot flt">
+          <h1>Overview</h1>
+          <li><a href="<%= $url %>">Home</a></li>
+          <li><a href="/features">Features</a></li>
+          <li><a href="#">Demo</a></li>
+          <li><a href="/plans">Plans & Pricing</a></li>
+          <li><a href="#">Blog</a></li>
+        </ul>
+        <ul class="foot-links flt mtop20">
+          <!--<li><a href="#">Home</a></li>-->
+          <!--<li><a href="#">Home</a></li>-->
+          <!--<li><a href="#">Home</a></li>-->
+          <!--<li><a href="#">Home</a></li>-->
+          <!--<li><a href="#">Home</a></li>-->
+        </ul>
+      </div>
+
+      <div class="linksholder-new flt">
+        <h1>Recent stores</h1>
+        <% count=0 %>
+        <% unless @recent_stores.nil? %>
+            <% @recent_stores.each do |store| %>
+                <% if count < 3 %>
+                    <% unless store.users.first.confirmed_at.blank? %>
+                        <div class="footer-bar-links flt">
+                          <% unless store.image.blank? %>
+                              <%= link_to image_tag(store.image.snap, :height => "50", :width => "50"), root_url(:subdomain =>store.name) %>
+                          <% else %>
+                              <%= link_to image_tag("/assets/no.png", :height => "50", :width => "50"), root_url(:subdomain =>store.name) %>
+                          <% end %>
+                          <h1><%= store.name %></h1>
+
+                          <h2>Retail</h2>
+                          <% count+=1 %>
+                        </div>
+                    <% end %>
+                <% end %>
+            <% end %>
+        <% end %>
+
+      </div>
+      <div class="linksholder-new flt">
+        <div class="footlogo flt"><%= link_to image_tag("/assets/footlogo.png"), $url %></div>
+        <div class="footlogo flt"><img src="/assets/photo.png" alt=""/></div>
+      </div>
+
+      <div class="linksholder1 flt">
+        <h1>Follow Us</h1>
+        <a href="http://www.facebook.com" target="_blank"><img src="/assets/facebookicon.png" alt=""/></a>
+        <a href="http://www.twitter.com" target="_blank"><img src="/assets/tweetericon.png" alt=""/></a>
+
+        <div class="copyright flt">Copyright &copy; 2011 Peddle Online.<br/>
+          All rights reserved.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
