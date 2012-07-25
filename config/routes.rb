@@ -1,4 +1,4 @@
-TwitterFacebookIntergration::Application.routes.draw do
+Peddle::Application.routes.draw do
 
   get "profiles/new"
 

@@ -4,4 +4,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-TwitterFacebookIntergration::Application.load_tasks
+Peddle::Application.load_tasks
