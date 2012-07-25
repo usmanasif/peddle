@@ -34,16 +34,17 @@
       <%#=   radio_button_tag(:role, "seller")%>
       <%#= select( [['New', 'new'], ['resolved', 'resolved'] , ['closed', 'closed']]) %>
     </div>
-    <div id="789" style="display: none" class="field">
 
-      <%= f.label :store_name %>
-      <%= f.text_field :store_name %>
-
-    </div>
 
 
       <p>this is a hidden feild phara</p>
       <%= f.fields_for :profile do |p| %>
+        <div id="789" style="display: none" class="field">
+
+          <%= p.label :store_name %>
+          <%= p.text_field :store_name %>
+
+        </div>
         <div id="account_display" style="display: none" class="field">
           <h3>Select a package</h3>
           <% @accounts.each do |account| %>
@@ -125,6 +126,15 @@
 
     $(document).ready(function () {
 //
+        $("#user_profile_attributes_account_id_1").click(function () {
+
+            $("#creditcarddetail").val("");
+            $("#creditcarddetail").hide();
+            $("#creditcarddetail").val("");
+            // $("#123").hide();
+
+
+        });
         $("#user_profile_attributes_account_id_2").click(function () {
 
             $("#creditcarddetail").show();

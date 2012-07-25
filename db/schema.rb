@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120719111846) do
+ActiveRecord::Schema.define(:version => 20120723112333) do
 
   create_table "accounts", :force => true do |t|
     t.string   "title"
@@ -223,6 +223,8 @@ ActiveRecord::Schema.define(:version => 20120719111846) do
     t.string   "paypal_profile_number"
     t.integer  "account_id"
     t.string   "credit_card_number"
+    t.string   "store_name"
+    t.datetime "expiry_date"
   end
 
   create_table "rails_admin_histories", :force => true do |t|
@@ -282,7 +284,6 @@ ActiveRecord::Schema.define(:version => 20120719111846) do
     t.string   "remember_me_token"
     t.datetime "remember_me_token_expires_at"
     t.string   "role"
-    t.string   "store_name"
     t.integer  "profile_id"
   end
 

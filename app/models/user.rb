@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
   authenticates_with_sorcery!
 
-  attr_accessible :email, :password, :password_confirmation, :name, :authentications_attributes, :profile_attributes, :role, :store_name
+  attr_accessible :email, :password, :password_confirmation, :name, :authentications_attributes, :profile_attributes, :role
 
 
   ROLES = [ADMIN, BUYER, SELLER]

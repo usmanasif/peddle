@@ -9,4 +9,10 @@ class Account < ActiveRecord::Base
   has_many :profiles
   has_many :subscriptions
 
+  def free?
+    if self.price == 0
+      return true
+    end
+    return false
+  end
 end
